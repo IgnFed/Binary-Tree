@@ -104,16 +104,16 @@ tree.newNode(2);
 tree.newNode(38);
 tree.newNode(7);
 
-('IN-ORDER');
+console.log('IN-ORDER');
 tree.travel(0, function (root, level, type) {
-  console.log(`${'--'.repeat(level)}${type} ${root.val}`);
+  console.log(`${'--'.repeat(level)}${type} ${root.val} ${level === 1 ? "(ROOT)" : ""}`);
 });
 
 (() => {
   setTimeout(() => {
     console.log('PRE-ORDEN');
     tree.travel(1, function (root, level) {
-      console.log(`${'--'.repeat(level)} ${root.val}`);
+      console.log(`${'--'.repeat(level)} ${root.val} ${level === 1 ? "(ROOT)" : ""}`);
     });
     return clearTimeout();
   }, 500);
@@ -123,7 +123,7 @@ tree.travel(0, function (root, level, type) {
   setTimeout(() => {
     console.log('POST-ORDEN');
     tree.travel(-1, function (root, level) {
-      console.log(`${'--'.repeat(level)} ${root.val}`);
+      console.log(`${'--'.repeat(level)} ${root.val} ${level === 1 ? "(ROOT)" : ""}`);
     });
     return clearTimeout();
   }, 1000);
