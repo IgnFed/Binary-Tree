@@ -13,7 +13,7 @@ class Tree {
 
   /*Function - Method*/
   newNode(value = undefined) {
-    if (!value) return 'Insert A Value';
+    if (!value) return "Insert A Value";
 
     const node = new Node(value);
     if (!this.root) {
@@ -33,20 +33,20 @@ class Tree {
   }
 
   /*Function - PRIVATE Method*/
-  #auxCheckWeightNode(value, root = this.root, level = 1) {
+  #auxCheckWeightNode(value, root = this.root) {
     if (value.val < root.val && root.left == null) {
       root.left = value;
-      return `${'*'.repeat(level)} ${value.val} --- left of ${root.val}`;
+      return;
     } else if (value.val < root.val && root.left)
-      return this.#auxCheckWeightNode(value, root.left, level + 1);
+      return this.#auxCheckWeightNode(value, root.left);
 
     if (value.val > root.val && root.right == null) {
       root.right = value;
-      return `${'*'.repeat(level)} ${value.val} --- right of ${root.val}`;
+      return;
     } else if (value.val > root.val && root.right)
-      return this.#auxCheckWeightNode(value, root.right, level + 1);
+      return this.#auxCheckWeightNode(value, root.right);
 
-    return ['null'];
+    return ["null"];
   }
 
   /*Function - Method*/
@@ -67,53 +67,55 @@ class Tree {
   /*Function - Method*/
 
   travel(type = 1, fn) {
-    if (type == 0) this.#inOrder(this.root, 1, '', fn);
-    if (type == 1) this.#preOrder(this.root, 1, '', fn);
-    if (type == -1) this.#postOrder(this.root, 1, '', fn);
+    if (type == 0) this.#inOrder(this.root, fn);
+    if (type == 1) this.#preOrder(this.root, fn);
+    if (type == -1) this.#postOrder(this.root, fn);
   }
 
   /*Function - PRIVATE Method*/
-  #preOrder(root, level, type, fn) {
-    fn(root, level, type);
-    if (root.left != null) this.#preOrder(root.left, level + 1, '<', fn);
-    if (root.right != null) this.#preOrder(root.right, level + 1, '>', fn);
+  #preOrder(root, fn) {
+    fn(root);
+    if (root.left != null) this.#preOrder(root.left, fn);
+    if (root.right != null) this.#preOrder(root.right, fn);
   }
 
   /*Function - PRIVATE Method*/
-  #postOrder(root, level, type, fn) {
-    if (root.left != null) this.#postOrder(root.left, level + 1, '<', fn);
-    if (root.right != null) this.#postOrder(root.right, level + 1, '>', fn);
-    fn(root, level, type);
+  #postOrder(root, fn) {
+    if (root.left != null) this.#postOrder(root.left, fn);
+    if (root.right != null) this.#postOrder(root.right, fn);
+    fn(root);
   }
 
-  #inOrder(root, level, type, fn) {
-    if (root.left != null) this.#inOrder(root.left, level + 1, '<', fn);
-    fn(root, level, type);
-    if (root.right != null) this.#inOrder(root.right, level + 1, '>', fn);
+  #inOrder(root, fn) {
+    if (root.left != null) this.#inOrder(root.left, fn);
+    fn(root);
+    if (root.right != null) this.#inOrder(root.right, fn);
   }
 }
 
 const tree = new Tree();
-tree.newNode(45);
-tree.newNode(23);
-tree.newNode(65);
-tree.newNode(52);
-tree.newNode(96);
-tree.newNode(48);
-tree.newNode(2);
-tree.newNode(38);
-tree.newNode(7);
+const nodeValues = [45, 23, 65, 52, 96, 48, 2, 38, 7];
 
-console.log('IN-ORDER');
-tree.travel(0, function (root, level, type) {
-  console.log(`${'--'.repeat(level)}${type} ${root.val} ${level === 1 ? "(ROOT)" : ""}`);
+for (const nodeValue of nodeValues) tree.newNode(nodeValue);
+
+console.log("");
+console.log("IN-ORDER");
+tree.travel(0, function (root) {
+  console.log(
+    `${"-".repeat(2)} ${root.val} ${root === tree.getRoot() ? "(ROOT)" : ""}`
+  );
 });
 
 (() => {
   setTimeout(() => {
-    console.log('PRE-ORDEN');
-    tree.travel(1, function (root, level) {
-      console.log(`${'--'.repeat(level)} ${root.val} ${level === 1 ? "(ROOT)" : ""}`);
+    console.log("");
+    console.log("PRE-ORDEN");
+    tree.travel(1, function (root) {
+      console.log(
+        `${"-".repeat(2)} ${root.val} ${
+          root === tree.getRoot() ? "(ROOT)" : ""
+        }`
+      );
     });
     return clearTimeout();
   }, 500);
@@ -121,10 +123,16 @@ tree.travel(0, function (root, level, type) {
 
 (() => {
   setTimeout(() => {
-    console.log('POST-ORDEN');
-    tree.travel(-1, function (root, level) {
-      console.log(`${'--'.repeat(level)} ${root.val} ${level === 1 ? "(ROOT)" : ""}`);
+    console.log("");
+    console.log("POST-ORDEN");
+    tree.travel(-1, function (root) {
+      console.log(
+        `${"-".repeat(2)} ${root.val} ${
+          root === tree.getRoot() ? "(ROOT)" : ""
+        }`
+      );
     });
+    console.log("");
     return clearTimeout();
   }, 1000);
 })();
